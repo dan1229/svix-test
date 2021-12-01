@@ -1,0 +1,6 @@
+.DSstore
+.DStore
+.__pycache__
+__pycache__
+db.sqlite3
+svix/db.sqlite3
