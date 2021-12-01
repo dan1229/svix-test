@@ -1,6 +1,7 @@
 import os
+import json 
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from svix.api import Svix, ApplicationIn, Application, MessageIn
 
@@ -11,23 +12,26 @@ def index(request):
     
     # an "application" refers to a user application
     # i.e., where we will be sending webhooks
-    app = svix.application.delete(Application() )
+    # app = svix.application.create(ApplicationIn(name="SvixTest", uid="Svix1"))
 
     
     # sending messages
-    # svix.message.create(
-    # "Svix-Test",
-    # MessageIn(
-    #     event_type="invoice.paid",
-    #     event_id="evt_Wqb1k73rXprtTm7Qdlr38G",
-    #     payload={
-    #         "id": "invoice_WF7WtCLFFtd8ubcTgboSFNql",
-    #         "status": "paid",
-    #         "attempt": 2
-    #         }
-    #     )
-    # )
+    svix.message.create(
+    "Svix1",
+    MessageIn(
+        event_type="invoice.paid",
+        event_id="evt_Wqb1k73rXprtTm7Qdlr38G",
+        payload={
+            "id": "invoice_WF7WtCLFFtd8ubcTgboSFNql",
+            "status": "paid",
+            "attempt": 2
+            }
+        )
+    )
     
     # ui dashboard
-    # dashboard_access_out = svix.authentication.dashboard_access('6F9gtf')
+    dashboard_access_out = svix.authentication.dashboard_access('Svix1')
+    # print(dashboard_access_out)
+    # decoded = json.loads(dashboard_access_out)
+    return redirect(dashboard_access_out.url)
     return render(request, "index.html")
