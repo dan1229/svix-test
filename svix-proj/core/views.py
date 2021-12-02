@@ -5,24 +5,30 @@ from django.shortcuts import render, redirect
 
 from svix.api import Svix, ApplicationIn, Application, MessageIn
 
+# app id to use
+app_id = "Svix3"
 
 def index(request):
-    svix = Svix(os.environ.get('SVIX_API_KEY'))
-    # good overview https://api.svix.com/docs#section/Introduction
     
+    # setup api
+    svix = Svix(os.environ.get('SVIX_API_KEY'))
+    
+    
+    # good overview https://api.svix.com/docs#section/Introduction
     # an "application" refers to a user application
     # i.e., where we will be sending webhooks
-    # app = svix.application.create(ApplicationIn(name="SvixTest", uid="Svix1"))
+    app = svix.application.create(ApplicationIn(name=app_id, uid=app_id))
 
     
     # sending messages
+    # https://www.svix.com/guides/sending/send-webhooks-with-svix-cli/
     svix.message.create(
-    "Svix1",
+    app_id,
     MessageIn(
         event_type="invoice.paid",
-        event_id="evt_Wqb1k73rXprtTm7Qdlr38G",
+        event_id="djydntynd",
         payload={
-            "id": "invoice_WF7WtCLFFtd8ubcTgboSFNql",
+            "id": "djydj",
             "status": "paid",
             "attempt": 2
             }
@@ -30,8 +36,7 @@ def index(request):
     )
     
     # ui dashboard
-    dashboard_access_out = svix.authentication.dashboard_access('Svix1')
+    dashboard_access_out = svix.authentication.dashboard_access(app_id)
     # print(dashboard_access_out)
     # decoded = json.loads(dashboard_access_out)
     return redirect(dashboard_access_out.url)
-    return render(request, "index.html")
